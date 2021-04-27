@@ -1,0 +1,26 @@
+server:
+  port: 3000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/monbudget
+    username: budget
+    password: budget123
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+#  main:
+#    allow-bean-definition-overriding: true
+
+#keycloak:
+#  realm: dev
+#  auth-server-url: http://keycloak.localhost/auth
+#  ssl-required: none
+#  resource: test-api
+#  credentials:
+#    secret: e90b4355-e418-4c1e-9340-fa50f36706bb
+#  use-resource-role-mappings: true
+#  bearer-only: true
