@@ -2,23 +2,20 @@ package fr.rmorel.moncompagnonbudgetapi.configuration
 
 import org.keycloak.adapters.KeycloakConfigResolver
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver
-import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
-import org.springframework.security.web.authentication.logout.LogoutFilter
-import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
-import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
+import org.springframework.security.core.session.SessionRegistryImpl
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -26,21 +23,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+
 @Configuration
 @EnableWebSecurity
-@ConditionalOnProperty(name = ["keycloak.enabled"], havingValue = "true", matchIfMissing = true)
-@ComponentScan(basePackageClasses = [KeycloakSecurityComponents::class])
-class KeycloakConfigurationAdapter : KeycloakWebSecurityConfigurerAdapter() {
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
+class KeycloakConfigurationAdapter: KeycloakWebSecurityConfigurerAdapter() {
 
     @Bean
     override fun sessionAuthenticationStrategy(): SessionAuthenticationStrategy {
-        // required for bearer-only applications.
-        return NullAuthenticatedSessionStrategy()
-    }
-
-    @Bean
-    fun KeycloakConfigResolver(): KeycloakConfigResolver {
-        return KeycloakSpringBootConfigResolver()
+        return RegisterSessionAuthenticationStrategy(SessionRegistryImpl())
     }
 
     @Autowired
@@ -54,34 +45,23 @@ class KeycloakConfigurationAdapter : KeycloakWebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
+        super.configure(http)
         http
-            .sessionManagement()
-            // use previously declared bean
-            .sessionAuthenticationStrategy(sessionAuthenticationStrategy())
-            // keycloak filters for securisation
-            .and()
-            .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter::class.java)
-            .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter::class.java)
-            .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
-
+            .logout().addLogoutHandler(keycloakLogoutHandler())
+            .logoutUrl("/logout").logoutSuccessHandler { _: HttpServletRequest, response: HttpServletResponse, _: Authentication -> response.status = HttpServletResponse.SC_OK }
             // add cors options
             .and().cors()
-            // delegate logout endpoint to spring security
-            .and().logout().addLogoutHandler(keycloakLogoutHandler())
-            .logoutUrl("/logout").logoutSuccessHandler { _: HttpServletRequest, response: HttpServletResponse, _: Authentication -> response.status = HttpServletResponse.SC_OK }
             // disable csrf because of API mode
             .and().csrf().disable()
             // active Stateless service option
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            // manage routes securisation here
             .and()
-            // manage routes securisation here
-            .authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll()
-            // manage routes securisation here
-            .and().authorizeRequests()
+            .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/logout", "/", "/api", "/api/v1","/api/v1/public/**").permitAll()
+            .antMatchers("/logout", "/", "/api", "/api/v1", "/api/v1/public", "/api/v1/public/**").permitAll()
+            .antMatchers("/api/v1/admin", "/api/v1/admin/**").hasRole("ADMIN")
             .antMatchers("/api/v1/**").authenticated()
-            .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
             .anyRequest().denyAll()
     }
 

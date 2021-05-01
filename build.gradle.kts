@@ -10,7 +10,9 @@ plugins {
 
 group = "fr.rmorel"
 version = "0.0.1"
-//java.sourceCompatibility = JavaVersion.VERSION_16
+java.sourceCompatibility = JavaVersion.VERSION_16
+
+val versionKeycloak = "12.0.4"
 
 repositories {
 	mavenCentral()
@@ -19,15 +21,24 @@ repositories {
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.keycloak:keycloak-spring-boot-starter:12.0.4")
-//	implementation("org.keycloak.bom:keycloak-adapter-bom:12.0.4")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	implementation("org.springframework.boot:spring-boot-starter-undertow")
+	implementation("org.springframework.boot:spring-boot-starter-web") {
+		exclude("org.springframework.boot", "spring-boot-starter-tomcat")
+	}
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+
+	implementation("org.keycloak:keycloak-spring-boot-starter:$versionKeycloak") {
+		exclude("org.springframework.boot", "spring-boot-starter-tomcat")
+	}
+	implementation("org.keycloak.bom:keycloak-adapter-bom:$versionKeycloak")
+
 	runtimeOnly("org.postgresql:postgresql")
+
+
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
