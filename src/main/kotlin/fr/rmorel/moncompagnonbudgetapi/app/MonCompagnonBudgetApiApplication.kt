@@ -1,4 +1,4 @@
-package fr.rmorel.moncompagnonbudgetapi
+package fr.rmorel.moncompagnonbudgetapi.app
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

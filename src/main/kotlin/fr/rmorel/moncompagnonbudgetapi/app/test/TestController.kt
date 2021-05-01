@@ -1,13 +1,12 @@
-package fr.rmorel.moncompagnonbudgetapi.test
+package fr.rmorel.moncompagnonbudgetapi.app.test
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.lang.Exception
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/api/v1/test")
 class TestController(
     private val testRepository: TestRepository
 ) {

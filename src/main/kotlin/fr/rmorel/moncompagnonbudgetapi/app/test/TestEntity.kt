@@ -1,4 +1,4 @@
-package fr.rmorel.moncompagnonbudgetapi.test
+package fr.rmorel.moncompagnonbudgetapi.app.test
 
 import javax.persistence.*
 

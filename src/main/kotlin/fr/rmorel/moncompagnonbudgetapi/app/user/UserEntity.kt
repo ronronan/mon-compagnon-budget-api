@@ -1,4 +1,4 @@
-package fr.rmorel.moncompagnonbudgetapi.user
+package fr.rmorel.moncompagnonbudgetapi.app.user
 
 import java.time.LocalDate
 import java.time.LocalDateTime

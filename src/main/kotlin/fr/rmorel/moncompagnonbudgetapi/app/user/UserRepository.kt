@@ -1,4 +1,4 @@
-package fr.rmorel.moncompagnonbudgetapi.user
+package fr.rmorel.moncompagnonbudgetapi.app.user
 
 import org.springframework.data.jpa.repository.JpaRepository
 
