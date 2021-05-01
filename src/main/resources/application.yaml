@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/monbudget
-    username: budget
+    username:
     password: budget123
   jpa:
     properties:

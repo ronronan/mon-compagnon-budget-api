@@ -12,7 +12,8 @@ class UserEntity (
     @Column val firstname: String,
     @Column val lastname: String,
     @Column val createdAt: LocalDate,
-    @Column val lastConnection: LocalDateTime
+    @Column val lastConnection: LocalDateTime,
+    @Column val role: String
 ) {
-    override fun toString() = "User[id=$id, email=$email, firstname=$firstname, lastname=$lastname, createdAt=$createdAt, lastConnection=$lastConnection]"
+    override fun toString() = "User[id=$id, email=$email, firstname=$firstname, lastname=$lastname, createdAt=$createdAt, lastConnection=$lastConnection, role=$role]"
 }
