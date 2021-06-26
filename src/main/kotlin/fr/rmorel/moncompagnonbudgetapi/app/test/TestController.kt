@@ -1,5 +1,6 @@
 package fr.rmorel.moncompagnonbudgetapi.app.test
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -10,9 +11,11 @@ import java.lang.Exception
 class TestController(
     private val testRepository: TestRepository
 ) {
+    private val logger = LoggerFactory.getLogger(TestController::class.java)
 
     @GetMapping("")
     fun getAll( @RequestParam(required = false) title: String?): ResponseEntity<List<TestEntity>> {
+
         return try {
             val testList = ArrayList<TestEntity>()
             if (title == null) {
