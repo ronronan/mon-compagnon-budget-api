@@ -5,16 +5,31 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
+
+enum class BudgetUserRole(private val code: Int) {
+    ADMIN(1), USER(2);
+
+    companion object {
+        fun fromString(role: String?): BudgetUserRole {
+            return if("ADMIN" == role) {
+                ADMIN
+            } else {
+                USER
+            }
+        }
+    }
+}
+
 @Entity
 @Table(name= "budget_users")
 class BudgetUserEntity (
     @Id @GeneratedValue(strategy = GenerationType.AUTO) val id: Long = 0,
     @Column val email: String,
-    @Column val firstname: String,
-    @Column val lastname: String,
+    @Column val firstname: String?,
+    @Column val lastname: String?,
     @Column val createdAt: LocalDate,
-    @Column val lastConnection: LocalDateTime,
-    @Column val role: String?
+    @Column var lastConnection: LocalDateTime,
+    @Enumerated @Column val role: BudgetUserRole
 ) {
     override fun toString() = "User[id=$id, email=$email, firstname=$firstname, lastname=$lastname, createdAt=$createdAt, lastConnection=$lastConnection, role=$role]"
 
@@ -26,8 +41,12 @@ class BudgetUserEntity (
                lastname = accessToken.familyName,
                createdAt = LocalDate.now(),
                lastConnection = LocalDateTime.now(),
-               role = null
+               role = BudgetUserRole.fromString(accessToken.realmAccess.roles.firstOrNull())
            )
        }
    }
+
+    fun updateLastConnection() {
+        this.lastConnection = LocalDateTime.now()
+    }
 }

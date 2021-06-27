@@ -1,16 +1,24 @@
 package fr.rmorel.moncompagnonbudgetapi.app.user
 
 import org.keycloak.representations.AccessToken
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class BudgetUserService(private val budgetUserRepository: BudgetUserRepository) {
 
-    private val logger = LoggerFactory.getLogger(BudgetUserService::class.java)
-
-    fun checkIfUserExistOrCreate(accessToken: AccessToken) {
+    fun checkIfUserExistOrCreate(accessToken: AccessToken): BudgetUserDto {
         val entity = BudgetUserEntity.fromAccessToken(accessToken)
-        logger.info("{}", entity)
+        val dbEntity = budgetUserRepository.findByEmail(entity.email)
+
+        // User doesn't exist, creation of user
+        val result = if (dbEntity == null) {
+            budgetUserRepository.save(entity)
+        } else { // User exist, return existing
+            dbEntity.updateLastConnection()
+            budgetUserRepository.save(dbEntity)
+        }
+        return BudgetUserDto.fromEntity(result)
     }
+
+    fun findAll(): List<BudgetUserDto> = budgetUserRepository.findAll().map { BudgetUserDto.fromEntity(it) }
 }
