@@ -41,7 +41,7 @@ class BudgetUserEntity (
                lastname = accessToken.familyName,
                createdAt = LocalDate.now(),
                lastConnection = LocalDateTime.now(),
-               role = BudgetUserRole.fromString(accessToken.realmAccess.roles.firstOrNull())
+               role = BudgetUserRole.fromString(accessToken.resourceAccess["monbudget-api"]?.roles?.firstOrNull())
            )
        }
    }
