@@ -19,8 +19,9 @@ class BudgetUserController(
     fun checkIfUserExistOrCreate(request: HttpServletRequest) : ResponseEntity<BudgetUserDto> {
         val principal = request.userPrincipal as KeycloakAuthenticationToken
         val accessToken = principal.account.keycloakSecurityContext.token as AccessToken
+        val budgetUserDto =  budgetUserService.checkIfUserExistOrCreate(accessToken)
         return ResponseEntity.ok(
-            budgetUserService.checkIfUserExistOrCreate(accessToken)
+            budgetUserDto
         )
     }
 
