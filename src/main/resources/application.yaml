@@ -4,23 +4,23 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/monbudget
-    username: budget
-    password: budget123
+    username: monbudget
+    password: monbudget123
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-#  main:
-#    allow-bean-definition-overriding: true
+  main:
+    allow-bean-definition-overriding: true
 
-#keycloak:
-#  realm: dev
-#  auth-server-url: http://keycloak.localhost/auth
-#  ssl-required: none
-#  resource: test-api
-#  credentials:
-#    secret: e90b4355-e418-4c1e-9340-fa50f36706bb
-#  use-resource-role-mappings: true
-#  bearer-only: true
+keycloak:
+  realm: local-dev
+  auth-server-url: http://keycloak.localhost/auth
+  ssl-required: none
+  resource: monbudget-api
+  credentials:
+    secret: 2063a814-3310-4cef-80ec-a7d3f104f3b9
+  use-resource-role-mappings: true
+  bearer-only: true
