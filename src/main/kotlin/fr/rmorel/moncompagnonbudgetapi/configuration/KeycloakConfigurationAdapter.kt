@@ -68,7 +68,7 @@ class KeycloakConfigurationAdapter: KeycloakWebSecurityConfigurerAdapter() {
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = listOf("*")
         configuration.allowedMethods = listOf(HttpMethod.OPTIONS.name, HttpMethod.GET.name, HttpMethod.POST.name, HttpMethod.PUT.name, HttpMethod.DELETE.name)
-        configuration.allowedHeaders = listOf("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Authorization")
+        configuration.allowedHeaders = listOf("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "content-type", "Authorization")
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source
