@@ -4,12 +4,12 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 class BankAccountDto(
-    val id: Long,
+    val id: Long = 0,
     val name: String,
     val bankName: String,
     val amount: Float,
-    val createdAt: LocalDate,
-    val updatedAt: LocalDateTime
+    val createdAt: LocalDate?,
+    val updatedAt: LocalDateTime?
 ) {
 
     companion object {

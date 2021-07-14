@@ -30,10 +30,9 @@ class BudgetUserEntity (
     @Column val picture: String?,
     @Column val createdAt: LocalDate,
     @Column var lastConnection: LocalDateTime,
-    @Enumerated @Column val role: BudgetUserRole
+    @Enumerated @Column val role: BudgetUserRole,
+    @Version val version: Int = 0
 ) {
-    override fun toString() = "User[id=$id, username=$username, email=$email, firstname=$firstname, lastname=$lastname, createdAt=$createdAt, lastConnection=$lastConnection, picture=$picture, role=$role]"
-
    companion object {
        fun fromAccessToken(accessToken: AccessToken): BudgetUserEntity {
            return BudgetUserEntity(
@@ -51,5 +50,9 @@ class BudgetUserEntity (
 
     fun updateLastConnection() {
         this.lastConnection = LocalDateTime.now()
+    }
+
+    override fun toString(): String {
+        return "BudgetUserEntity(id=$id, username='$username', email='$email', firstname=$firstname, lastname=$lastname, picture=$picture, createdAt=$createdAt, lastConnection=$lastConnection, role=$role, version=$version)"
     }
 }

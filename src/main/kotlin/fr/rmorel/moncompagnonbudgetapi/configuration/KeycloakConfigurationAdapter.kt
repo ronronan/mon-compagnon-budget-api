@@ -1,7 +1,5 @@
 package fr.rmorel.moncompagnonbudgetapi.configuration
 
-import org.keycloak.adapters.KeycloakConfigResolver
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -60,7 +58,7 @@ class KeycloakConfigurationAdapter: KeycloakWebSecurityConfigurerAdapter() {
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/logout", "/", "/api", "/api/v1", "/api/v1/public", "/api/v1/public/**").permitAll()
-            .antMatchers("/api/v1/admin", "/api/v1/admin/**").hasRole("ADMIN")
+            .antMatchers("/api/v1/admin", "/api/v1/admin/**", "/api/v1/**/admin", "/api/v1/**/admin/**").hasRole("ADMIN")
             .antMatchers("/api/v1/**").authenticated()
             .anyRequest().denyAll()
     }

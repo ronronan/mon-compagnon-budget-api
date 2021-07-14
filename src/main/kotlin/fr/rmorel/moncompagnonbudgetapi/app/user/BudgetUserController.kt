@@ -25,7 +25,7 @@ class BudgetUserController(
         )
     }
 
-    @GetMapping("")
+    @GetMapping("/admin/get-users")
     fun findAll(): ResponseEntity<List<BudgetUserDto>> {
         val listUser = budgetUserService.findAll()
         return if (listUser.isEmpty()){
