@@ -16,11 +16,11 @@ spring:
     allow-bean-definition-overriding: true
 
 keycloak:
-  realm: local-dev
+  realm: local
   auth-server-url: http://keycloak.localhost/auth
   ssl-required: none
   resource: monbudget-api
   credentials:
-    secret: 2063a814-3310-4cef-80ec-a7d3f104f3b9
+    secret: 409ff46a-c85a-453d-ad94-03160a4364b7
   use-resource-role-mappings: true
   bearer-only: true
